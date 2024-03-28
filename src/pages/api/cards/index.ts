@@ -10,6 +10,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   await errorHandler(req, res, async () => {
     switch (req.method) {
       case 'GET': {
+        const page = Number(req.query.page);
         const cards = await prisma.cards.findMany({
           select: {
             id: true,
@@ -18,6 +19,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             updated_at: true,
             bio: true,
           },
+          skip: 4 * page,
+          take: 4,
           orderBy: {
             updated_at: 'desc',
           },
